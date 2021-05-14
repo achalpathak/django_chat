@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>Chat Application</h3>
+    <h4>Choose your role:</h4>
+
+    <input id="username" type="text" placeholder="Your Username" />
+    <input id="agent_selected" type="button" value="Agent" />
+    <input id="customer_selected" type="button" value="Customer" />
+    <script>
+      var userName = document.querySelector("#username").value;
+      document.querySelector("#agent_selected").onclick = function (e) {
+        window.location.replace("/agent_portal?username=" + userName);
+      };
+      document.querySelector("#customer_selected").onclick = function (e) {
+        window.location.replace("/customer_portal?username=" + userName);
+      };
+    </script>
+  </body>
+</html>
