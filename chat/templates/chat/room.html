@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>Chat Application</h3>
+    <h4>Chat Room -> <i>{{room_name}}</i></h4>
+    <h4>Your UserName -> <i>{{username}}</i></h4>
+    <hr />
+    <hr />
+    <div id="chat-messages">
+      {% for m in messages %}<b>{{m.username}}</b>: {{m.content}}<br />{%endfor%}
+    </div>
+    <hr />
+    <hr />
+    <input id="msg" type="text" placeholder="Type msg here" />
+    <input id="send_msg" type="button" value="Send Msg" />
+    <script>
+      const roomName = "{{room_name}}";
+      const chatSocket = new WebSocket(
+        "ws://" + window.location.host + "/websocket/" + roomName + "/"
+      );
+      chatSocket.onmessage = function (e) {
+        const resp = JSON.parse(e.data);
+        if (resp.message) {
+          document.querySelector("#chat-messages").innerHTML +=
+            "<b>" + resp.username + "</b>: " + resp.message + "<br>";
+        } else {
+          alert("empty message");
+        }
+      };
+      chatSocket.onclose = function (e) {
+        console.log("web socket closed.");
+      };
+      document.querySelector("#send_msg").onclick = function (e) {
+        const msg = document.querySelector("#msg");
+        chatSocket.send(
+          JSON.stringify({
+            message: msg.value,
+            username: "{{username}}",
+            room: "{{room_name}}",
+          })
+        );
+        msg.value = "";
+      };
+    </script>
+  </body>
+</html>
